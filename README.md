@@ -1,1 +1,1 @@
-## Creating an Agentic AI ChatBotS
+## Creating an Agentic AI ChatBot
