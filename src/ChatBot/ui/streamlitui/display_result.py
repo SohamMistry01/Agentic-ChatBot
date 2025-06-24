@@ -40,3 +40,37 @@ class DisplayResultStreamlit:
                 elif type(message)==AIMessage and message.content:
                     with st.chat_message("assistant"):
                         st.write(message.content)
+
+        elif usecase == "Global News":
+            frequency = self.user_message
+            with st.spinner("Fetching and summarizing news... ⏳"):
+                result = graph.invoke({"messages": frequency})
+                try:
+                    # Read the markdown file
+                    SPORTS_NEWS_PATH = f"./News_Summary/{frequency.lower()}_global_summary.md"
+                    with open(SPORTS_NEWS_PATH, "r") as file:
+                        markdown_content = file.read()
+
+                    # Display the markdown content in Streamlit
+                    st.markdown(markdown_content, unsafe_allow_html=True)
+                except FileNotFoundError:
+                    st.error(f"News Not Generated or File not found: {SPORTS_NEWS_PATH}")
+                except Exception as e:
+                    st.error(f"An error occurred: {str(e)}")
+
+        elif usecase == "India News":
+            frequency = self.user_message
+            with st.spinner("Fetching and summarizing news... ⏳"):
+                result = graph.invoke({"messages": frequency})
+                try:
+                    # Read the markdown file
+                    SPORTS_NEWS_PATH = f"./News_Summary/{frequency.lower()}_india_summary.md"
+                    with open(SPORTS_NEWS_PATH, "r") as file:
+                        markdown_content = file.read()
+
+                    # Display the markdown content in Streamlit
+                    st.markdown(markdown_content, unsafe_allow_html=True)
+                except FileNotFoundError:
+                    st.error(f"News Not Generated or File not found: {SPORTS_NEWS_PATH}")
+                except Exception as e:
+                    st.error(f"An error occurred: {str(e)}")
