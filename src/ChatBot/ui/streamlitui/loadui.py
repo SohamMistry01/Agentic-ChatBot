@@ -38,7 +38,7 @@ class LoadStreamlitUI:
             # Usecase selection
             self.user_controls["selected_usecase"]=st.selectbox("Select Usecases",usecase_options)
 
-            if self.user_controls["selected_usecase"] =="ChatBot with Web" or self.user_controls["selected_usecase"] =="Global News" or self.user_controls["selected_usecase"] =="India News":
+            if self.user_controls["selected_usecase"] in ["ChatBot with Web", "Global News", "India News", "Sports News", "Technology News"]:
                 os.environ["TAVILY_API_KEY"]=self.user_controls["TAVILY_API_KEY"]=st.session_state["TAVILY_API_KEY"]=st.text_input("TAVILY API KEY",type="password")
 
                 # Validate API key
@@ -68,6 +68,32 @@ class LoadStreamlitUI:
                         index=0
                     )
                 if st.button("🔍 Fetch Latest India's News", use_container_width=True):
+                    st.session_state.IsFetchButtonClicked = True
+                    st.session_state.timeframe = time_frame
+
+            if self.user_controls['selected_usecase']=="Sports News":
+                st.subheader("📰 Sports News Explorer ")
+                
+                with st.sidebar:
+                    time_frame = st.selectbox(
+                        "📅 Select Time Frame",
+                        ["Daily", "Weekly", "Monthly"],
+                        index=0
+                    )
+                if st.button("🔍 Fetch Latest Sports News", use_container_width=True):
+                    st.session_state.IsFetchButtonClicked = True
+                    st.session_state.timeframe = time_frame
+
+            if self.user_controls['selected_usecase']=="Technology News":
+                st.subheader("📰 Technology News Explorer ")
+                
+                with st.sidebar:
+                    time_frame = st.selectbox(
+                        "📅 Select Time Frame",
+                        ["Daily", "Weekly", "Monthly"],
+                        index=0
+                    )
+                if st.button("🔍 Fetch Latest Technology News", use_container_width=True):
                     st.session_state.IsFetchButtonClicked = True
                     st.session_state.timeframe = time_frame
 

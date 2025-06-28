@@ -6,6 +6,8 @@ from src.ChatBot.tools.search_tool import get_tools, create_tool_node
 from langgraph.prebuilt import tools_condition
 from src.ChatBot.nodes.global_news_node import GlobalNewsNode
 from src.ChatBot.nodes.india_news_node import IndiaNewsNode
+from src.ChatBot.nodes.sports_news_node import SportsNewsNode
+from src.ChatBot.nodes.technology_news_node import TechnologyNewsNode
 
 class GraphBuilder:
 
@@ -54,9 +56,43 @@ class GraphBuilder:
         self.graph_builder.add_conditional_edges("chatbot",tools_condition)
         self.graph_builder.add_edge("tools","chatbot")
 
-    def ai_news_builder_graph_1(self):
+    def global_news_builder_graph(self):
 
-        sports_news_node=GlobalNewsNode(self.llm)
+        global_news_node=GlobalNewsNode(self.llm)
+
+        ## added the nodes
+
+        self.graph_builder.add_node("fetch_news",global_news_node.fetch_news)
+        self.graph_builder.add_node("summarize_news",global_news_node.summarize_news)
+        self.graph_builder.add_node("save_result",global_news_node.save_result)
+
+        #added the edges
+
+        self.graph_builder.set_entry_point("fetch_news")
+        self.graph_builder.add_edge("fetch_news","summarize_news")
+        self.graph_builder.add_edge("summarize_news","save_result")
+        self.graph_builder.add_edge("save_result", END)
+
+    def india_news_builder_graph(self):
+
+        india_news_node=IndiaNewsNode(self.llm)
+
+        ## added the nodes
+
+        self.graph_builder.add_node("fetch_news",india_news_node.fetch_news)
+        self.graph_builder.add_node("summarize_news",india_news_node.summarize_news)
+        self.graph_builder.add_node("save_result",india_news_node.save_result)
+
+        #added the edges
+
+        self.graph_builder.set_entry_point("fetch_news")
+        self.graph_builder.add_edge("fetch_news","summarize_news")
+        self.graph_builder.add_edge("summarize_news","save_result")
+        self.graph_builder.add_edge("save_result", END)
+
+    def sports_news_builder_graph(self):
+
+        sports_news_node=SportsNewsNode(self.llm)
 
         ## added the nodes
 
@@ -71,15 +107,15 @@ class GraphBuilder:
         self.graph_builder.add_edge("summarize_news","save_result")
         self.graph_builder.add_edge("save_result", END)
 
-    def ai_news_builder_graph_2(self):
+    def technology_news_builder_graph(self):
 
-        sports_news_node=IndiaNewsNode(self.llm)
+        technology_news_node=TechnologyNewsNode(self.llm)
 
         ## added the nodes
 
-        self.graph_builder.add_node("fetch_news",sports_news_node.fetch_news)
-        self.graph_builder.add_node("summarize_news",sports_news_node.summarize_news)
-        self.graph_builder.add_node("save_result",sports_news_node.save_result)
+        self.graph_builder.add_node("fetch_news",technology_news_node.fetch_news)
+        self.graph_builder.add_node("summarize_news",technology_news_node.summarize_news)
+        self.graph_builder.add_node("save_result",technology_news_node.save_result)
 
         #added the edges
 
@@ -97,8 +133,12 @@ class GraphBuilder:
         if usecase == "ChatBot with Web":
             self.chatbot_with_tools_build_graph()
         if usecase == "Global News":
-            self.ai_news_builder_graph_1()
+            self.global_news_builder_graph()
         if usecase == "India News":
-            self.ai_news_builder_graph_2()
+            self.india_news_builder_graph()
+        if usecase == "Sports News":
+            self.sports_news_builder_graph()
+        if usecase == "Technology News":
+            self.technology_news_builder_graph()
 
         return self.graph_builder.compile()
